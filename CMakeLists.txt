@@ -15,14 +15,6 @@ set( bk_src
 
 set( LIBLEMON_ROOT "$ENV{HOME}/lemon" CACHE PATH "Additional search directory for lemon library" )
 
-set( GitCommand1 "symbolic-ref HEAD 2> /dev/null | cut -b 12-" )
-execute_process( COMMAND git symbolic-ref HEAD  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-COMMAND tail -c -7 COMMAND tr -d "\\n" OUTPUT_VARIABLE GitBranch )
-set( GitCommand2 "log --pretty=format:\\\"%h\\\" -1" )
-execute_process( COMMAND git log --pretty=format:%h WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-COMMAND head -n 1  COMMAND tr -d "\\n" OUTPUT_VARIABLE GitHashtag )
-set( ANCESTREE_VERSION \"${GitBranch}-${GitHashtag}\" )
-
 set( Boost_USE_STATIC_LIBS ON )
 find_package( Boost REQUIRED )
 
@@ -32,8 +24,8 @@ if( ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++ " )
 endif()
 
-include_directories( ${CPLEX_INC_DIR} ${CONCERT_INC_DIR} "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} )
-link_directories( ${CPLEX_LIB_DIR} ${CONCERT_LIB_DIR} "${LIBLEMON_ROOT}/lib" )
+include_directories( "${LIBLEMON_ROOT}/include" "src" ${Boost_INCLUDE_DIRS} )
+link_directories( "${LIBLEMON_ROOT}/lib" )
 
 set( CommonLibs
 	m
